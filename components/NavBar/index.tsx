@@ -1,9 +1,24 @@
 import React from "react";
-
-import { Navbar, Link, Text, Avatar, Dropdown } from "@nextui-org/react";
+import {
+  Navbar,
+  Link,
+  Text,
+  Avatar,
+  Dropdown,
+  Button,
+} from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo";
+import { useRouter } from "next/router";
+import { runInContext } from "vm";
+
+interface IRoutes {
+  path: string;
+  name: string;
+}
 
 const NavBar = () => {
+  const { route, push } = useRouter();
+
   const collapseItems = [
     "Home",
     "All Meetups",
@@ -14,8 +29,23 @@ const NavBar = () => {
     "Log Out",
   ];
 
+  const ROUTES: IRoutes[] = [
+    {
+      path: "/",
+      name: "Home",
+    },
+    {
+      path: "/all-meetups",
+      name: "All Meetups",
+    },
+    {
+      path: "/about",
+      name: "About",
+    },
+  ];
+
   return (
-    <Navbar isBordered variant="sticky">
+    <Navbar variant="sticky">
       <Navbar.Toggle showIn="xs" />
       <Navbar.Brand
         css={{
@@ -23,9 +53,17 @@ const NavBar = () => {
             w: "12%",
           },
         }}
+        hideIn="xs"
       >
         <AcmeLogo />
-        <Text b color="inherit" hideIn="xs">
+        <Text
+          onClick={() => push("/")}
+          css={{
+            cursor: "pointer",
+          }}
+          b
+          color="inherit"
+        >
           Lets Link
         </Text>
       </Navbar.Brand>
@@ -35,55 +73,73 @@ const NavBar = () => {
         hideIn="xs"
         variant="highlight-rounded"
       >
-        <Navbar.Link href="#">Home</Navbar.Link>
-        <Navbar.Link href="#">All Meetups</Navbar.Link>
-        <Navbar.Link isActive href="#">
-          About
-        </Navbar.Link>
+        {ROUTES.map((item) =>
+          route === item.path ? (
+            <Navbar.Link isActive href={item.path}>
+              {item.name}
+            </Navbar.Link>
+          ) : (
+            <Navbar.Link href={item.path}>{item.name}</Navbar.Link>
+          )
+        )}
       </Navbar.Content>
-      <Navbar.Content
-        css={{
-          "@xs": {
-            w: "12%",
-            jc: "flex-end",
-          },
-        }}
-      >
-        <Dropdown placement="bottom-right">
+      {true === true ? (
+        <Navbar.Content>
+          <Navbar.Link color="inherit" href="#">
+            Login
+          </Navbar.Link>
           <Navbar.Item>
-            <Dropdown.Trigger>
-              <Avatar
-                bordered
-                as="button"
-                color="secondary"
-                size="md"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-              />
-            </Dropdown.Trigger>
+            <Button color={"secondary"} auto flat as={Link} href="#">
+              Sign Up
+            </Button>
           </Navbar.Item>
-          <Dropdown.Menu
-            aria-label="User menu actions"
-            color="secondary"
-            onAction={(actionKey) => console.log({ actionKey })}
-          >
-            <Dropdown.Item key="profile" css={{ height: "$18" }}>
-              <Text b color="inherit" css={{ d: "flex" }}>
-                Signed in as
-              </Text>
-              <Text b color="inherit" css={{ d: "flex" }}>
-                azaniam04@gmail.com
-              </Text>
-            </Dropdown.Item>
-            <Dropdown.Item key="settings" withDivider>
-              Settings
-            </Dropdown.Item>
-            <Dropdown.Item key="help_and_feedback">Profile</Dropdown.Item>
-            <Dropdown.Item key="logout" withDivider color="error">
-              Log Out
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Navbar.Content>
+        </Navbar.Content>
+      ) : (
+        <Navbar.Content
+          css={{
+            "@xs": {
+              w: "12%",
+              jc: "flex-end",
+            },
+          }}
+        >
+          <Dropdown placement="bottom-right">
+            <Navbar.Item>
+              <Dropdown.Trigger>
+                <Avatar
+                  bordered
+                  as="button"
+                  color="secondary"
+                  size="md"
+                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                />
+              </Dropdown.Trigger>
+            </Navbar.Item>
+            <Dropdown.Menu
+              aria-label="User menu actions"
+              color="secondary"
+              onAction={(actionKey) => console.log({ actionKey })}
+            >
+              <Dropdown.Item key="profile" css={{ height: "$18" }}>
+                <Text b color="inherit" css={{ d: "flex" }}>
+                  Signed in as
+                </Text>
+                <Text b color="inherit" css={{ d: "flex" }}>
+                  azaniam04@gmail.com
+                </Text>
+              </Dropdown.Item>
+              <Dropdown.Item key="settings" withDivider>
+                Settings
+              </Dropdown.Item>
+              <Dropdown.Item key="help_and_feedback">Profile</Dropdown.Item>
+              <Dropdown.Item key="logout" withDivider color="error">
+                Log Out
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Navbar.Content>
+      )}
+
       <Navbar.Collapse>
         {collapseItems.map((item, index) => (
           <Navbar.CollapseItem
