@@ -73,17 +73,19 @@ const NavBar = () => {
         hideIn="xs"
         variant="highlight-rounded"
       >
-        {ROUTES.map((item) =>
+        {ROUTES.map((item, index) =>
           route === item.path ? (
-            <Navbar.Link isActive href={item.path}>
+            <Navbar.Link key={index} isActive href={item.path}>
               {item.name}
             </Navbar.Link>
           ) : (
-            <Navbar.Link href={item.path}>{item.name}</Navbar.Link>
+            <Navbar.Link key={index} href={item.path}>
+              {item.name}
+            </Navbar.Link>
           )
         )}
       </Navbar.Content>
-      {true === true ? (
+      {true !== true ? (
         <Navbar.Content>
           <Navbar.Link color="inherit" href="#">
             Login
