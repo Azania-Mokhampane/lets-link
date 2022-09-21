@@ -77,11 +77,11 @@ const NavBar = () => {
       >
         {ROUTES.map((item, index) =>
           route === item.path ? (
-            <Navbar.Link key={index} isActive href={item.path}>
+            <Navbar.Link key={index} isActive onClick={() => push(item.path)}>
               {item.name}
             </Navbar.Link>
           ) : (
-            <Navbar.Link key={index} href={item.path}>
+            <Navbar.Link key={index} onClick={() => push(item.path)}>
               {item.name}
             </Navbar.Link>
           )
@@ -157,7 +157,7 @@ const NavBar = () => {
               css={{
                 minWidth: "100%",
               }}
-              href={item.path}
+              onClick={() => push(item.path)}
             >
               {item.name}
             </Link>

@@ -1,4 +1,4 @@
-import { Button, Text } from "@nextui-org/react";
+import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import Head from "next/head";
 import React, { useState } from "react";
 import NewMeetupForm from "../../components/Forms/NewMeetupForm";
@@ -7,6 +7,48 @@ import Modal from "../../components/UI/Modal";
 
 const MeetUps = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const list = [
+    {
+      title: "Orange",
+      img: "/images/fruit-1.jpeg",
+      price: "$5.50",
+    },
+    {
+      title: "Tangerine",
+      img: "/images/fruit-2.jpeg",
+      price: "$3.00",
+    },
+    {
+      title: "Raspberry",
+      img: "/images/fruit-3.jpeg",
+      price: "$10.00",
+    },
+    {
+      title: "Lemon",
+      img: "/images/fruit-4.jpeg",
+      price: "$5.30",
+    },
+    {
+      title: "Advocato",
+      img: "/images/fruit-5.jpeg",
+      price: "$15.70",
+    },
+    {
+      title: "Lemon 2",
+      img: "/images/fruit-6.jpeg",
+      price: "$8.00",
+    },
+    {
+      title: "Banana",
+      img: "/images/fruit-7.jpeg",
+      price: "$7.50",
+    },
+    {
+      title: "Watermelon",
+      img: "/images/fruit-8.jpeg",
+      price: "$12.20",
+    },
+  ];
   return (
     <>
       <Head>
@@ -26,6 +68,49 @@ const MeetUps = () => {
       >
         <NewMeetupForm />
       </Modal>
+      <Grid.Container gap={2} justify="center">
+        {list.map((item, index) => (
+          <Grid xs={7} sm={5}>
+            <Card css={{ w: "100%", h: "400px" }}>
+              <Card.Body css={{ p: 0 }}>
+                <Card.Image
+                  src="https://nextui.org/images/card-example-5.jpeg"
+                  objectFit="cover"
+                  width="100%"
+                  height="100%"
+                  alt="Relaxing app background"
+                />
+              </Card.Body>
+              <Card.Footer
+                css={{
+                  position: "absolute",
+                  bgBlur: "#0f111466",
+                  borderTop: "$borderWeights$light solid $gray800",
+                  bottom: 0,
+                  zIndex: 1,
+                }}
+              >
+                <div className="flex flex-col justify-center items-center w-full">
+                  <Text css={{ color: "white" }}>First Meetup</Text>
+                  <Spacer />
+                  <Text css={{ color: "white" }}>
+                    27 J Van Melle Str, Vanderbijlpark
+                  </Text>
+                  <Spacer />
+                  <Button
+                    flat
+                    auto
+                    rounded
+                    css={{ color: "#94f9f0", bg: "#94f9f026" }}
+                  >
+                    Show Details
+                  </Button>
+                </div>
+              </Card.Footer>
+            </Card>
+          </Grid>
+        ))}
+      </Grid.Container>
     </>
   );
 };
