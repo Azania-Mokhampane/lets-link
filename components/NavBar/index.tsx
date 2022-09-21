@@ -10,6 +10,8 @@ import {
 import { AcmeLogo } from "./AcmeLogo";
 import { useRouter } from "next/router";
 import { runInContext } from "vm";
+import Login from "../Auth/Login";
+import SignUp from "../Auth/SignUp";
 
 interface IRoutes {
   path: string;
@@ -88,12 +90,10 @@ const NavBar = () => {
       {0 == 0 ? (
         <Navbar.Content>
           <Navbar.Link color="inherit" href="#">
-            Login
+            <Login />
           </Navbar.Link>
           <Navbar.Item>
-            <Button color={"secondary"} auto flat as={Link} href="#">
-              Sign Up
-            </Button>
+            <SignUp />
           </Navbar.Item>
         </Navbar.Content>
       ) : (
@@ -143,23 +143,23 @@ const NavBar = () => {
       )}
 
       <Navbar.Collapse>
-        {collapseItems.map((item, index) => (
+        {ROUTES.map((item, index) => (
           <Navbar.CollapseItem
-            key={item}
+            key={item.name}
             activeColor="secondary"
             css={{
               color: index === collapseItems.length - 1 ? "$error" : "",
             }}
-            isActive={index === 2}
+            isActive={route === item.path}
           >
             <Link
               color="inherit"
               css={{
                 minWidth: "100%",
               }}
-              href="#"
+              href={item.path}
             >
-              {item}
+              {item.name}
             </Link>
           </Navbar.CollapseItem>
         ))}
