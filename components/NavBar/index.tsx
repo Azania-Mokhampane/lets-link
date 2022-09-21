@@ -143,23 +143,23 @@ const NavBar = () => {
       )}
 
       <Navbar.Collapse>
-        {collapseItems.map((item, index) => (
+        {ROUTES.map((item, index) => (
           <Navbar.CollapseItem
-            key={item}
+            key={item.name}
             activeColor="secondary"
             css={{
               color: index === collapseItems.length - 1 ? "$error" : "",
             }}
-            isActive={index === 2}
+            isActive={route === item.path}
           >
             <Link
               color="inherit"
               css={{
                 minWidth: "100%",
               }}
-              href="#"
+              href={item.path}
             >
-              {item}
+              {item.name}
             </Link>
           </Navbar.CollapseItem>
         ))}
