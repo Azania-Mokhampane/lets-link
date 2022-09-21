@@ -70,7 +70,7 @@ const MeetUps = () => {
       </Modal>
       <Grid.Container gap={2} justify="center">
         {list.map((item, index) => (
-          <Grid xs={7} sm={5}>
+          <Grid xs={7} sm={5} key={index}>
             <Card css={{ w: "100%", h: "400px" }}>
               <Card.Body css={{ p: 0 }}>
                 <Card.Image
