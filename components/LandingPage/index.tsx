@@ -9,7 +9,7 @@ const LandingPage = () => {
           h1
           className="text-center font-semibold text-4xl md:text-6xl leading-tight pb-20"
         >
-          Let's Link makes organizing easy!
+          Let&apos;s Link makes organizing easy!
         </Text>
         <Text h4 className="text-center max-w-3xl ">
           Making hosting and organizing in-person and virtual activities,
