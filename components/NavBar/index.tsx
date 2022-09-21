@@ -45,7 +45,7 @@ const NavBar = () => {
   ];
 
   return (
-    <Navbar variant="sticky">
+    <Navbar variant="floating">
       <Navbar.Toggle showIn="xs" />
       <Navbar.Brand
         css={{
@@ -85,7 +85,7 @@ const NavBar = () => {
           )
         )}
       </Navbar.Content>
-      {true !== true ? (
+      {0 == 0 ? (
         <Navbar.Content>
           <Navbar.Link color="inherit" href="#">
             Login
