@@ -9,15 +9,17 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo";
 import { useRouter } from "next/router";
-import { useAuthenticationStatus, useSignOut } from "@nhost/nextjs";
+import { useAuthenticationStatus, useSignOut, useUserData, useUserId } from "@nhost/nextjs";
 interface IRoutes {
   path: string;
   name: string;
 }
 
 const NavBar = () => {
+  
   const { route, push } = useRouter();
   const { isAuthenticated } = useAuthenticationStatus();
+const userData = useUserData()
   const { signOut } = useSignOut();
   console.log("IsAuthenticated:", isAuthenticated);
 
@@ -25,6 +27,9 @@ const NavBar = () => {
     signOut();
     push("/");
   };
+
+  console.log("User data :", userData?.avatarUrl);
+  const avatarUrl = userData?.avatarUrl.includes("default=blank") ? "https://i.pravatar.cc/150?u=a042581f4e29026704d" : userData?.avatarUrl
 
   const collapseItems = [
     "Home",
@@ -109,7 +114,7 @@ const NavBar = () => {
                   as="button"
                   color="secondary"
                   size="md"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  src={avatarUrl}
                 />
               </Dropdown.Trigger>
             </Navbar.Item>
@@ -123,7 +128,7 @@ const NavBar = () => {
                   Signed in as
                 </Text>
                 <Text b color="inherit" css={{ d: "flex" }}>
-                  azaniam04@gmail.com
+                  {userData?.displayName || userData?.email }
                 </Text>
               </Dropdown.Item>
               <Dropdown.Item key="settings" withDivider>
