@@ -9,10 +9,9 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo";
 import { useRouter } from "next/router";
-import { runInContext } from "vm";
 import Login from "../Auth/Login";
 import SignUp from "../Auth/SignUp";
-
+import { useAuthenticationStatus, useSignOut } from "@nhost/nextjs";
 interface IRoutes {
   path: string;
   name: string;
@@ -20,6 +19,9 @@ interface IRoutes {
 
 const NavBar = () => {
   const { route, push } = useRouter();
+  const { isAuthenticated } = useAuthenticationStatus();
+  const { signOut } = useSignOut();
+  console.log("IsAuthenticated:", isAuthenticated);
 
   const collapseItems = [
     "Home",
@@ -87,7 +89,7 @@ const NavBar = () => {
           )
         )}
       </Navbar.Content>
-      {0 == 0 ? (
+      {!isAuthenticated ? (
         <Navbar.Content>
           <Navbar.Link color="inherit" href="#">
             <Login />
@@ -134,8 +136,10 @@ const NavBar = () => {
                 Settings
               </Dropdown.Item>
               <Dropdown.Item key="help_and_feedback">Profile</Dropdown.Item>
-              <Dropdown.Item key="logout" withDivider color="error">
-                Log Out
+              <Dropdown.Item key="logout" withDivider>
+                <Text onClick={signOut} color="error">
+                  Log Out
+                </Text>
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

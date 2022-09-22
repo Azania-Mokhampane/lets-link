@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+import { useSignInEmailPassword, useSignUpEmailPassword } from "@nhost/nextjs";
 import {
   Button,
   Checkbox,
@@ -7,11 +9,35 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import React, { useState } from "react";
+
 import Modal from "../UI/Modal";
+import { useRouter } from "next/router";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const {
+    signInEmailPassword,
+    isLoading,
+    isSuccess,
+    needsEmailVerification,
+    isError,
+    error,
+  } = useSignInEmailPassword();
+
+  const router = useRouter();
+
+  const handleOnSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    await signInEmailPassword(email, password);
+  };
+  if (isSuccess) {
+    router.push("/all-meetups");
+    return null;
+  }
   const closeHandler = () => {
     setIsOpen(false);
   };
@@ -21,39 +47,47 @@ const Login = () => {
         Login
       </Button>
       <Modal modalTitle="Login" onOpen={isOpen} onClose={closeHandler}>
-        <Input
-          clearable
-          bordered
-          fullWidth
-          color="primary"
-          size="lg"
-          placeholder="Email"
-          // contentLeft={<Mail fill="currentColor" />}
-        />
-        <Input
-          clearable
-          bordered
-          fullWidth
-          color="primary"
-          size="lg"
-          placeholder="Password"
-          // contentLeft={<Password fill="currentColor" />}
-        />
-        <Row justify="space-between">
-          <Checkbox>
-            <Text size={14}>Remember me</Text>
-          </Checkbox>
-          <Text size={14}>Forgot password?</Text>
-        </Row>
-        <Row justify="flex-end">
-          <Button auto flat color="error" onClick={closeHandler}>
-            Close
-          </Button>
-          <Spacer />
-          <Button color="secondary" auto shadow onClick={closeHandler}>
-            Login
-          </Button>
-        </Row>
+        <form onSubmit={handleOnSubmit}>
+          <Input
+            clearable
+            bordered
+            fullWidth
+            color="primary"
+            size="lg"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            clearable
+            bordered
+            fullWidth
+            color="primary"
+            size="lg"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Row justify="space-between">
+            <Checkbox>
+              <Text size={14}>Remember me</Text>
+            </Checkbox>
+            <Text size={14}>Forgot password?</Text>
+          </Row>
+          <Row justify="flex-end">
+            <Button auto flat color="error" onClick={closeHandler}>
+              Close
+            </Button>
+            <Spacer />
+            <Button
+              type="submit"
+              color="secondary"
+              auto
+              shadow
+              onClick={closeHandler}
+            >
+              Login
+            </Button>
+          </Row>
+        </form>
       </Modal>
     </>
   );
