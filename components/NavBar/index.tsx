@@ -9,10 +9,7 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo";
 import { useRouter } from "next/router";
-import { runInContext } from "vm";
-import Login from "../Auth/Login";
-import SignUp from "../Auth/SignUp";
-
+import { useAuthenticationStatus, useSignOut } from "@nhost/nextjs";
 interface IRoutes {
   path: string;
   name: string;
@@ -20,6 +17,14 @@ interface IRoutes {
 
 const NavBar = () => {
   const { route, push } = useRouter();
+  const { isAuthenticated } = useAuthenticationStatus();
+  const { signOut } = useSignOut();
+  console.log("IsAuthenticated:", isAuthenticated);
+
+  const signOutHandler = () => {
+    signOut();
+    push("/");
+  };
 
   const collapseItems = [
     "Home",
@@ -77,26 +82,17 @@ const NavBar = () => {
       >
         {ROUTES.map((item, index) =>
           route === item.path ? (
-            <Navbar.Link key={index} isActive href={item.path}>
+            <Navbar.Link key={index} isActive onClick={() => push(item.path)}>
               {item.name}
             </Navbar.Link>
           ) : (
-            <Navbar.Link key={index} href={item.path}>
+            <Navbar.Link key={index} onClick={() => push(item.path)}>
               {item.name}
             </Navbar.Link>
           )
         )}
       </Navbar.Content>
-      {0 == 0 ? (
-        <Navbar.Content>
-          <Navbar.Link color="inherit" href="#">
-            <Login />
-          </Navbar.Link>
-          <Navbar.Item>
-            <SignUp />
-          </Navbar.Item>
-        </Navbar.Content>
-      ) : (
+      {isAuthenticated ? (
         <Navbar.Content
           css={{
             "@xs": {
@@ -134,11 +130,31 @@ const NavBar = () => {
                 Settings
               </Dropdown.Item>
               <Dropdown.Item key="help_and_feedback">Profile</Dropdown.Item>
-              <Dropdown.Item key="logout" withDivider color="error">
-                Log Out
+              <Dropdown.Item key="logout" withDivider>
+                <Text onClick={signOutHandler} color="error">
+                  Log Out
+                </Text>
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+        </Navbar.Content>
+      ) : (
+        <Navbar.Content>
+          <Navbar.Link color="inherit">
+            <Button auto flat onClick={() => push("/auth/login")}>
+              Login
+            </Button>
+          </Navbar.Link>
+          <Navbar.Item>
+            <Button
+              color={"secondary"}
+              auto
+              flat
+              onClick={() => push("/auth/sign-up")}
+            >
+              Sign Up
+            </Button>
+          </Navbar.Item>
         </Navbar.Content>
       )}
 
@@ -157,7 +173,7 @@ const NavBar = () => {
               css={{
                 minWidth: "100%",
               }}
-              href={item.path}
+              onClick={() => push(item.path)}
             >
               {item.name}
             </Link>
