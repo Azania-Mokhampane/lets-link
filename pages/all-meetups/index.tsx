@@ -1,54 +1,41 @@
-import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Card, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewMeetupForm from "../../components/Forms/NewMeetupForm";
 import NavBar from "../../components/NavBar";
 import Modal from "../../components/UI/Modal";
+import { useQuery } from "@apollo/client";
+import { MEETUP_LIST } from "../../graphql/queries";
+import { useAuthenticationStatus } from "@nhost/nextjs";
+import { useRouter } from "next/router";
+
+interface IMeetupProps {
+  meetup_list: {
+    meetup_address: string;
+    meetup_description: string;
+    meetup_image: string;
+    meetup_title: string;
+    uuid: string;
+  }[];
+}
 
 const MeetUps = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const list = [
-    {
-      title: "Orange",
-      img: "/images/fruit-1.jpeg",
-      price: "$5.50",
-    },
-    {
-      title: "Tangerine",
-      img: "/images/fruit-2.jpeg",
-      price: "$3.00",
-    },
-    {
-      title: "Raspberry",
-      img: "/images/fruit-3.jpeg",
-      price: "$10.00",
-    },
-    {
-      title: "Lemon",
-      img: "/images/fruit-4.jpeg",
-      price: "$5.30",
-    },
-    {
-      title: "Advocato",
-      img: "/images/fruit-5.jpeg",
-      price: "$15.70",
-    },
-    {
-      title: "Lemon 2",
-      img: "/images/fruit-6.jpeg",
-      price: "$8.00",
-    },
-    {
-      title: "Banana",
-      img: "/images/fruit-7.jpeg",
-      price: "$7.50",
-    },
-    {
-      title: "Watermelon",
-      img: "/images/fruit-8.jpeg",
-      price: "$12.20",
-    },
-  ];
+  const [meetupData, setMeetupData] = useState<IMeetupProps | null>(null);
+  const { data } = useQuery(MEETUP_LIST);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    setMeetupData(data);
+  }, [data]);
+
+  const { isAuthenticated } = useAuthenticationStatus();
+
+  if (!isAuthenticated) {
+    router.push("/");
+  }
+
   return (
     <>
       <Head>
@@ -58,19 +45,22 @@ const MeetUps = () => {
       </Head>
 
       <NavBar />
-      <Button shadow color="secondary" auto onClick={() => setOpen(true)}>
-        Add New Meetup
-      </Button>
+      <Row css={{ my: 20 }} justify="center">
+        <Button shadow color="secondary" auto onClick={() => setOpen(true)}>
+          Add New Meetup
+        </Button>
+      </Row>
+
       <Modal
         onOpen={open}
         onClose={() => setOpen(false)}
         modalTitle="Add New Meetup"
       >
-        <NewMeetupForm />
+        <NewMeetupForm onClose={() => setOpen(false)} />
       </Modal>
       <Grid.Container gap={2} justify="center">
-        {list.map((item, index) => (
-          <Grid xs={7} sm={5} key={index}>
+        {meetupData?.meetup_list.map((item) => (
+          <Grid xs={7} sm={5} key={item.uuid}>
             <Card css={{ w: "100%", h: "400px" }}>
               <Card.Body css={{ p: 0 }}>
                 <Card.Image
@@ -91,11 +81,9 @@ const MeetUps = () => {
                 }}
               >
                 <div className="flex flex-col justify-center items-center w-full">
-                  <Text css={{ color: "white" }}>First Meetup</Text>
+                  <Text css={{ color: "white" }}>{item.meetup_title}</Text>
                   <Spacer />
-                  <Text css={{ color: "white" }}>
-                    27 J Van Melle Str, Vanderbijlpark
-                  </Text>
+                  <Text css={{ color: "white" }}>{item.meetup_address}</Text>
                   <Spacer />
                   <Button
                     flat

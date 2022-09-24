@@ -17,7 +17,6 @@ interface IModalProps {
 const Modal: FC<IModalProps> = ({ onClose, onOpen, children, modalTitle }) => {
   const closeHandler = () => {
     onClose();
-    console.log("closed");
   };
   return (
     <>
