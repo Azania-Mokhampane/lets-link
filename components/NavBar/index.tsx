@@ -9,27 +9,30 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo";
 import { useRouter } from "next/router";
-import { useAuthenticationStatus, useSignOut, useUserData, useUserId } from "@nhost/nextjs";
+import {
+  useAuthenticationStatus,
+  useSignOut,
+  useUserData,
+} from "@nhost/nextjs";
 interface IRoutes {
   path: string;
   name: string;
 }
 
 const NavBar = () => {
-  
   const { route, push } = useRouter();
   const { isAuthenticated } = useAuthenticationStatus();
-const userData = useUserData()
+  const userData = useUserData();
   const { signOut } = useSignOut();
-  console.log("IsAuthenticated:", isAuthenticated);
 
   const signOutHandler = () => {
     signOut();
     push("/");
   };
 
-  console.log("User data :", userData?.avatarUrl);
-  const avatarUrl = userData?.avatarUrl.includes("default=blank") ? "https://i.pravatar.cc/150?u=a042581f4e29026704d" : userData?.avatarUrl
+  const avatarUrl = userData?.avatarUrl.includes("default=blank")
+    ? "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+    : userData?.avatarUrl;
 
   const collapseItems = [
     "Home",
@@ -128,7 +131,7 @@ const userData = useUserData()
                   Signed in as
                 </Text>
                 <Text b color="inherit" css={{ d: "flex" }}>
-                  {userData?.displayName || userData?.email }
+                  {userData?.displayName || userData?.email}
                 </Text>
               </Dropdown.Item>
               <Dropdown.Item key="settings" withDivider>
