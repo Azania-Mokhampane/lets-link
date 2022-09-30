@@ -60,7 +60,7 @@ const NavBar = () => {
   ];
 
   return (
-    <Navbar variant="floating">
+    <Navbar variant="sticky" disableBlur>
       <Navbar.Toggle showIn="xs" />
       <Navbar.Brand
         css={{
