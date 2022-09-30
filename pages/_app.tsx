@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { NextUIProvider } from "@nextui-org/react";
+import { NhostApolloProvider } from "@nhost/react-apollo";
 import { NhostClient, NhostNextProvider } from "@nhost/nextjs";
 
 const nhost = new NhostClient({
@@ -11,9 +12,11 @@ const nhost = new NhostClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <NhostNextProvider nhost={nhost}>
-      <NextUIProvider>
-        <Component {...pageProps} />
-      </NextUIProvider>
+      <NhostApolloProvider nhost={nhost}>
+        <NextUIProvider>
+          <Component {...pageProps} />
+        </NextUIProvider>
+      </NhostApolloProvider>
     </NhostNextProvider>
   );
 }
