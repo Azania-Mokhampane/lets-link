@@ -126,7 +126,10 @@ const NavBar = () => {
                 </Text>
               </Dropdown.Item>
               <Dropdown.Item key="settings" withDivider>
-                Settings
+                <Text onClick={() => push("/settings/change-password")}>
+                  {" "}
+                  Settings
+                </Text>
               </Dropdown.Item>
               <Dropdown.Item key="help_and_feedback">Profile</Dropdown.Item>
             </Dropdown.Menu>
