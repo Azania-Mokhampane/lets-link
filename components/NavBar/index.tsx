@@ -9,11 +9,8 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo";
 import { useRouter } from "next/router";
-import {
-  useAuthenticationStatus,
-  useSignOut,
-  useUserData,
-} from "@nhost/nextjs";
+import { useAuthenticationStatus, useUserData } from "@nhost/nextjs";
+import Logout from "../Logout";
 interface IRoutes {
   path: string;
   name: string;
@@ -23,12 +20,6 @@ const NavBar = () => {
   const { route, push } = useRouter();
   const { isAuthenticated } = useAuthenticationStatus();
   const userData = useUserData();
-  const { signOut } = useSignOut();
-
-  const signOutHandler = () => {
-    signOut();
-    push("/");
-  };
 
   const avatarUrl = userData?.avatarUrl.includes("default=blank")
     ? "https://i.pravatar.cc/150?u=a042581f4e29026704d"
@@ -109,7 +100,7 @@ const NavBar = () => {
             },
           }}
         >
-          <Dropdown placement="bottom-right">
+          <Dropdown closeOnSelect={false} placement="bottom-right">
             <Navbar.Item>
               <Dropdown.Trigger>
                 <Avatar
@@ -124,7 +115,7 @@ const NavBar = () => {
             <Dropdown.Menu
               aria-label="User menu actions"
               color="secondary"
-              onAction={(actionKey) => console.log({ actionKey })}
+              // onAction={(actionKey) => console.log({ actionKey })}
             >
               <Dropdown.Item key="profile" css={{ height: "$18" }}>
                 <Text b color="inherit" css={{ d: "flex" }}>
@@ -138,13 +129,9 @@ const NavBar = () => {
                 Settings
               </Dropdown.Item>
               <Dropdown.Item key="help_and_feedback">Profile</Dropdown.Item>
-              <Dropdown.Item key="logout" withDivider>
-                <Text onClick={signOutHandler} color="error">
-                  Log Out
-                </Text>
-              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+          <Logout />
         </Navbar.Content>
       ) : (
         <Navbar.Content>
