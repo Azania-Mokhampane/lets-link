@@ -24,7 +24,6 @@ const MeetUps = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [meetupData, setMeetupData] = useState<IMeetupProps | null>(null);
   const { data } = useQuery(MEETUP_LIST);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -36,7 +35,6 @@ const MeetUps = () => {
   if (!isAuthenticated) {
     router.push("/");
   }
-
   return (
     <>
       <Head>
@@ -60,7 +58,7 @@ const MeetUps = () => {
         <NewMeetupForm onClose={() => setOpen(false)} />
       </Modal>
       <Grid.Container className=" grid grid-cols-1" gap={2} justify="center">
-        {meetupData?.meetup_list.map((item) => (
+        {meetupData?.meetup_list?.map((item) => (
           <Grid sm={12} md={5} xl={3} key={item.uuid}>
             <Card>
               <Card.Body css={{ p: 0 }}>
