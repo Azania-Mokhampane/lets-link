@@ -1,4 +1,4 @@
-import { Button, Card, Grid, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Card, Grid, Row, Text } from "@nextui-org/react";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import NewMeetupForm from "../../components/Forms/NewMeetupForm";
@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { MEETUP_LIST } from "../../graphql/queries";
 import { useAuthenticationStatus } from "@nhost/nextjs";
 import { useRouter } from "next/router";
+import { ImLocation } from "react-icons/im";
 
 interface IMeetupProps {
   meetup_list: {
@@ -58,38 +59,34 @@ const MeetUps = () => {
       >
         <NewMeetupForm onClose={() => setOpen(false)} />
       </Modal>
-      <Grid.Container gap={2} justify="center">
+      <Grid.Container className=" grid grid-cols-1" gap={2} justify="center">
         {meetupData?.meetup_list.map((item) => (
-          <Grid xs={7} sm={5} key={item.uuid}>
-            <Card css={{ w: "100%", h: "400px" }}>
+          <Grid sm={12} md={5} xl={3} key={item.uuid}>
+            <Card>
               <Card.Body css={{ p: 0 }}>
                 <Card.Image
-                  src="https://nextui.org/images/card-example-5.jpeg"
+                  src={"https://nextui.org/images/card-example-5.jpeg"}
                   objectFit="cover"
                   width="100%"
                   height="100%"
                   alt="Relaxing app background"
                 />
               </Card.Body>
-              <Card.Footer
-                css={{
-                  position: "absolute",
-                  bgBlur: "#0f111466",
-                  borderTop: "$borderWeights$light solid $gray800",
-                  bottom: 0,
-                  zIndex: 1,
-                }}
-              >
-                <div className="flex flex-col justify-center items-center w-full">
-                  <Text css={{ color: "white" }}>{item.meetup_title}</Text>
-                  <Spacer />
-                  <Text css={{ color: "white" }}>{item.meetup_address}</Text>
-                  <Spacer />
+              <Card.Divider />
+              <Card.Footer>
+                <div className="flex flex-col justify-center items-center w-full ">
+                  <Text css={{ color: "black" }}>{item.meetup_title}</Text>
+                  <div className="flex items-center mt-2 gap-2">
+                    <ImLocation />
+                    <Text css={{ color: "black" }}>{item.meetup_address}</Text>
+                  </div>
+
                   <Button
+                    css={{ mt: 10 }}
                     flat
                     auto
                     rounded
-                    css={{ color: "#94f9f0", bg: "#94f9f026" }}
+                    color={"secondary"}
                   >
                     Show Details
                   </Button>
