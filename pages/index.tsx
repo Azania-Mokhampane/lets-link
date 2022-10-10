@@ -1,9 +1,17 @@
+import { useAuthenticationStatus } from "@nhost/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import LandingPage from "../components/LandingPage";
 import NavBar from "../components/NavBar";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthenticationStatus();
+
+  if (!isAuthenticated) {
+    router.push("/auth/login");
+  }
   return (
     <>
       <Head>

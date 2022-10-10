@@ -65,7 +65,7 @@ const MeetUps = () => {
             <Card>
               <Card.Body css={{ p: 0 }}>
                 <Card.Image
-                  src="https://nextui.org/images/card-example-5.jpeg"
+                  src={"https://nextui.org/images/card-example-5.jpeg"}
                   objectFit="cover"
                   width="100%"
                   height="100%"
