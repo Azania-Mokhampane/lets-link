@@ -1,32 +1,74 @@
-import { Button, Card, Grid, Input, Row, Text } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Grid,
+  Input,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { useChangePassword } from "@nhost/nextjs";
 import Head from "next/head";
+import * as Yup from "yup";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../../components/NavBar";
 import LoginSvg from "../../components/UI/SVG/login";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
+
+const schema = Yup.object({
+  newPassword: Yup.string()
+    .min(8, "Password must be 8 characters long")
+    .required("Password is required"),
+  confirmedPassword: Yup.string().oneOf(
+    [Yup.ref("newPassword"), null],
+    "Passwords must match"
+  ),
+});
+
+interface IChangePasswordFormValues {
+  newPassword: string;
+  confirmedPassword: string;
+}
 
 const ChangePassword = () => {
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmedPassword, setConfirmedPassword] = useState<string>("");
+  const { push } = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<IChangePasswordFormValues>({
+    defaultValues: {
+      newPassword: "",
+      confirmedPassword: "",
+    },
+    resolver: yupResolver(schema),
+  });
   const { changePassword, isSuccess, isError, error } = useChangePassword();
 
-  console.log({ isSuccess, isError, error });
-
-  const handleFormSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (isError) {
+  const handleFormSubmit = async (values: IChangePasswordFormValues) => {
+    try {
+      setLoading(true);
+      if (values.newPassword === values.confirmedPassword) {
+        await changePassword(values.confirmedPassword);
+        toast.success("Password Successfully Changed.");
+      }
+      setLoading(false);
+    } catch (error) {
       //@ts-ignore
-      toast.error(error?.message);
-    }
-    if (newPassword === confirmedPassword) {
-      return await changePassword(confirmedPassword);
-    } else if (newPassword !== confirmedPassword) {
-      toast.error("The passwords does not match!!");
-    } else if (isSuccess) {
-      toast.success("Password Successfully Changed.");
+      toast.error(error?.message, { duration: 5000 });
+    } finally {
+      reset();
     }
   };
+  if (isSuccess) {
+    setTimeout(() => push("/all-meetups"), 3000);
+  }
   return (
     <>
       <Toaster />
@@ -43,30 +85,42 @@ const ChangePassword = () => {
             <Card.Header css={{ justifyContent: "center", py: 30 }}>
               <Text h3>Change Password</Text>
             </Card.Header>
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
               <Input.Password
                 bordered
                 fullWidth
                 color="primary"
                 size="lg"
                 placeholder="New Password"
-                onChange={(e) => setNewPassword(e.target.value)}
+                {...register("newPassword")}
                 css={{ mb: 20 }}
               />
-
+              {errors.newPassword ? (
+                <Text color="error">{errors.newPassword.message}</Text>
+              ) : null}
               <Input.Password
                 bordered
                 fullWidth
                 color="primary"
                 size="lg"
                 placeholder="Confirm Password"
-                onChange={(e) => setConfirmedPassword(e.target.value)}
+                {...register("confirmedPassword")}
                 css={{ mb: 20 }}
               />
-
+              {errors.confirmedPassword ? (
+                <Text color="error">{errors.confirmedPassword.message}</Text>
+              ) : null}
               <Row justify="center">
                 <Button type="submit" color="secondary" shadow>
-                  Submit
+                  {loading ? (
+                    <Row justify="space-evenly">
+                      <Text color={"white"}>Loading</Text>
+                      <Spacer />
+                      <Loading type="spinner" color={"white"} size="lg" />
+                    </Row>
+                  ) : (
+                    "Reset Password"
+                  )}
                 </Button>
               </Row>
             </form>
