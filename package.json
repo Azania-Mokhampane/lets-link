@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@hookform/resolvers": "^2.9.8",
     "@nextui-org/react": "^1.0.0-beta.10",
     "@nhost/nextjs": "^1.7.5",
     "@nhost/react": "^0.12.5",
@@ -18,9 +19,10 @@
     "next": "12.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.36.0",
+    "react-hook-form": "^7.37.0",
     "react-hot-toast": "^2.4.0",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.4.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "18.7.18",
