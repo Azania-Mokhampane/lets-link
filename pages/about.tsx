@@ -1,8 +1,16 @@
+import { useAuthenticationStatus } from "@nhost/nextjs";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React from "react";
 import NavBar from "../components/NavBar";
 
 const About = () => {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthenticationStatus();
+
+  if (!isAuthenticated) {
+    router.push("/");
+  }
   return (
     <>
       <Head>

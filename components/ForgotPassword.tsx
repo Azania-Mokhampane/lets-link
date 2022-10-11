@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { useResetPassword } from "@nhost/nextjs";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import EmailSent from "./UI/SVG/emailSent";
 
 const schema = Yup.object({
   email: Yup.string()
@@ -41,9 +42,11 @@ const ForgotPassword = () => {
     useResetPassword();
 
   const handleFormSubmit = async (values: IForgotPasswordFormProps) => {
-    await resetPassword(values.email, {
-      redirectTo: "http://localhost:3000/settings/change-password",
-    });
+    try {
+      await resetPassword(values.email, {
+        redirectTo: "http://localhost:3000/settings/change-password",
+      });
+    } catch (error) {}
   };
   return (
     <>
@@ -58,41 +61,64 @@ const ForgotPassword = () => {
       <Modal
         onOpen={open}
         onClose={() => setOpen(false)}
-        modalTitle="Reset Password"
+        modalTitle={isSent ? "Check your emails" : "Reset Password"}
       >
-        {" "}
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Card.Body css={{ py: "$10" }}>
-            <Input
-              clearable
-              bordered
-              fullWidth
-              placeholder="Please enter you email"
-              {...register("email")}
-            />
-            {errors.email ? (
-              <Text color="error">{errors.email.message}</Text>
-            ) : null}
-          </Card.Body>
-          <Card.Footer>
-            <Row justify="space-evenly">
-              <Button size="sm" light>
-                Cancel
-              </Button>
-              <Button type={"submit"} auto shadow color={"secondary"} size="sm">
-                {isLoading ? (
-                  <Row justify="space-evenly">
-                    <Text color={"white"}>Resetting</Text>
-                    <Spacer />
-                    <Loading type="spinner" color={"white"} size="lg" />
-                  </Row>
-                ) : (
-                  "Send Request"
-                )}
-              </Button>
-            </Row>
-          </Card.Footer>{" "}
-        </form>
+        {isSent ? (
+          <Row
+            justify="center"
+            css={{ flexDirection: "column", alignItems: "center" }}
+          >
+            <EmailSent className="w-5/6" />
+            <Text css={{ textAlign: "center" }}>
+              We have sent you a passwork recovery link, to your email.
+            </Text>
+          </Row>
+        ) : (
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <Card.Body css={{ py: "$10" }}>
+              <Input
+                clearable
+                bordered
+                fullWidth
+                placeholder="Please enter you email"
+                {...register("email")}
+              />
+              {errors.email ? (
+                <Text color="error">{errors.email.message}</Text>
+              ) : null}
+            </Card.Body>
+            <Card.Footer>
+              <Row justify="space-evenly">
+                <Button size="sm" light onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Row
+                  justify="center"
+                  css={{ flexDirection: "column", alignItems: "center" }}
+                >
+                  <Button
+                    type={"submit"}
+                    auto
+                    shadow
+                    color={"secondary"}
+                    size="sm"
+                  >
+                    {isLoading ? (
+                      <Row justify="space-evenly">
+                        <Text color={"white"}>Sending</Text>
+                        <Spacer />
+                        <Loading type="spinner" color={"white"} size="lg" />
+                      </Row>
+                    ) : (
+                      "Send Request"
+                    )}
+                  </Button>
+                  {isError ? <Text color="error">{error?.message}</Text> : null}
+                </Row>
+              </Row>
+            </Card.Footer>{" "}
+          </form>
+        )}
       </Modal>
     </>
   );
