@@ -6,12 +6,6 @@ import LandingPage from "../components/LandingPage";
 import NavBar from "../components/NavBar";
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  const { isAuthenticated } = useAuthenticationStatus();
-
-  if (!isAuthenticated) {
-    router.push("/auth/login");
-  }
   return (
     <>
       <Head>

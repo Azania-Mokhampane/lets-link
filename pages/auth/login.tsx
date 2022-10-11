@@ -64,10 +64,11 @@ const Login = () => {
     try {
       await signInEmailPassword(values.email, values.password);
     } catch (error) {
-      //@ts-ignore
-      toast.error(error?.message);
-    } finally {
-      reset();
+      if (isError) {
+        //@ts-ignore
+        toast.error(errorMessage?.message);
+        console.log("Error Caught");
+      }
     }
   };
 
@@ -126,7 +127,10 @@ const Login = () => {
                 </Checkbox>
                 <ForgotPassword />
               </Row>
-              <Row justify="center">
+              <Row
+                justify="center"
+                css={{ flexDirection: "column", alignItems: "center" }}
+              >
                 <Button type="submit" color="secondary" shadow>
                   {isLoading ? (
                     <Row justify="space-evenly">
@@ -138,6 +142,9 @@ const Login = () => {
                     "Login"
                   )}
                 </Button>
+                {isError ? (
+                  <Text color="error">{errorMessage?.message}</Text>
+                ) : null}
               </Row>
             </form>
             <Card.Footer css={{ justifyContent: "center", mt: 20 }}>

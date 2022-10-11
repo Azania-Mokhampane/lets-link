@@ -8,7 +8,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { useChangePassword } from "@nhost/nextjs";
+import { useAuthenticationStatus, useChangePassword } from "@nhost/nextjs";
 import Head from "next/head";
 import * as Yup from "yup";
 import React, { useState } from "react";
@@ -36,6 +36,7 @@ interface IChangePasswordFormValues {
 
 const ChangePassword = () => {
   const { push } = useRouter();
+
   const [loading, setLoading] = useState<boolean>(false);
   const {
     register,
@@ -50,6 +51,9 @@ const ChangePassword = () => {
     resolver: yupResolver(schema),
   });
   const { changePassword, isSuccess, isError, error } = useChangePassword();
+  if (isError) {
+    console.log(error?.message);
+  }
 
   const handleFormSubmit = async (values: IChangePasswordFormValues) => {
     try {
