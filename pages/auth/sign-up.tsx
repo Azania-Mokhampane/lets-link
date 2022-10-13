@@ -61,17 +61,24 @@ const SignUp = () => {
   const { signUpEmailPassword, isLoading, isSuccess, isError, error } =
     useSignUpEmailPassword();
   const handleOnSubmit = async (values: SignUpFormValues) => {
+    try {
+      await signUpEmailPassword(values.email, values.password, {
+        displayName: `${values.firstName} ${values.lastName}`.trim(),
+        metadata: {
+          firstName: values.firstName,
+          lastName: values.lastName,
+        },
+      });
+      toast.success(
+        "Signing up was successful, please check your email to verify your account"
+      );
+    } catch (error) {
+      //@ts-ignore
+    }
     if (isError) {
       //@ts-ignore
       toast.error(error?.message);
     }
-    await signUpEmailPassword(values.email, values.password, {
-      displayName: `${values.firstName} ${values.lastName}`.trim(),
-      metadata: {
-        firstName: values.firstName,
-        lastName: values.lastName,
-      },
-    });
   };
   if (isSuccess) {
     router.push("/all-meetups");
@@ -80,7 +87,6 @@ const SignUp = () => {
 
   return (
     <>
-      {" "}
       <Toaster />
       <Head>
         <title>Let&apos;s Link | Sign Up</title>
